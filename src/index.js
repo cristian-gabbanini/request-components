@@ -1,7 +1,7 @@
 import * as React from "react";
 import { render } from "react-dom";
 import "./styles.css";
-import RoomRequest from "./RoomRequest";
+import Request from "./Request";
 import { ThemeProvider } from "emotion-theming";
 
 const theme = {
@@ -12,7 +12,14 @@ const theme = {
 
 render(
   <ThemeProvider theme={theme}>
-    <RoomRequest />
+    <Request
+      minRooms={1}
+      maxRooms={5}
+      minAdults={1}
+      maxAdults={8}
+      minChildren={0}
+      maxChildren={3}
+    />
   </ThemeProvider>,
   document.getElementById("app")
 );
