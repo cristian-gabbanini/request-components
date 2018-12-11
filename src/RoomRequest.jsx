@@ -4,8 +4,17 @@ import AgeSelector from "./AgeSelector";
 import styled from "@emotion/styled";
 
 const Row = styled.div`
+  @media only screen and (max-width: 337px) {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
   div {
     margin: 0 1.4em;
+    @media only screen and (max-width: 337px) {
+      margin: 1em 0;
+    }
     &:first-of-type {
       margin-left: 0;
     }
@@ -16,6 +25,7 @@ const Row = styled.div`
 `;
 
 function Request(props) {
+  const { maxChildren } = props;
   const [childrenAges, setChildrenAges] = useState([]);
   const [numChildren, setNumChildren] = useState(0);
   const [adults, setAdults] = useState(1);
@@ -58,7 +68,7 @@ function Request(props) {
       />
       <NumberInput
         min={0}
-        max={3}
+        max={maxChildren}
         label={["Child", "Children"]}
         description={"Under 16 years old"}
         onChange={handleChildrenChange}

@@ -31,7 +31,7 @@ const RoomTitle = styled.h2`
 `;
 
 function Request(props) {
-  const { minRooms, maxRooms } = props;
+  const { maxChildren, minRooms, maxRooms } = props;
   const [rooms, setRooms] = useState(minRooms);
   function handleRoomsChange(rooms, direction) {
     setRooms(rooms);
@@ -50,9 +50,8 @@ function Request(props) {
         .fill(1)
         .map((room, index) => (
           <div key={index}>
-            {index > 0 ? <Separator /> : null}
             <RoomTitle>Room {index + 1}</RoomTitle>
-            <RoomRequest />
+            <RoomRequest maxChildren={maxChildren} />
           </div>
         ))}
     </div>
