@@ -1,15 +1,33 @@
+/** @jsx jsx */
 import React, { useState } from "react";
 import NumberInput from "./NumberInput";
 import RoomRequest from "./RoomRequest";
 import styled from "@emotion/styled";
+import { jsx } from "@emotion/core";
 
 const Separator = styled.hr`
-  border: 1px solid #ededed;
+  margin-top: 2em;
+  border: 0px solid #ededed;
 `;
 
 const RoomTitle = styled.h2`
-  margin: 0.5em 0;
+  margin: 1.5em 0 0.5em 0;
   color: #313131;
+  overflow: hidden;
+  &:first-of-type {
+    &:after {
+      position: relative;
+      top: -0.55em;
+      right: -4.5em;
+      display: block;
+      content: "";
+      width: 80%;
+      max-width: 25em;
+      height: 2px;
+      background-color: #ededed;
+      z-index: -1;
+    }
+  }
 `;
 
 function Request(props) {
@@ -19,7 +37,7 @@ function Request(props) {
     setRooms(rooms);
   }
   return (
-    <div>
+    <div css={{ padding: "1em" }}>
       <NumberInput
         min={minRooms}
         max={maxRooms}
@@ -31,7 +49,7 @@ function Request(props) {
       {Array(rooms)
         .fill(1)
         .map((room, index) => (
-          <div>
+          <div key={index}>
             {index > 0 ? <Separator /> : null}
             <RoomTitle>Room {index + 1}</RoomTitle>
             <RoomRequest />
