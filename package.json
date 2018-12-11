@@ -12,7 +12,6 @@
     "@emotion/styled": "10.0.4",
     "emotion": "10.0.4",
     "emotion-theming": "10.0.4",
-    "material-icons": "0.2.3",
     "react": "16.7.0-alpha.2 - next",
     "react-dom": "16.7.0-alpha.2 - next"
   },
