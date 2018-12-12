@@ -34,6 +34,8 @@ const RoomTitle = styled.h2`
   }
 `;
 
+const today = new Date();
+
 function Request(props) {
   const {
     maxChildren,
@@ -41,34 +43,58 @@ function Request(props) {
     maxRooms,
     minChildrenAge,
     maxChildrenAge,
-    onChange
+    onChange,
+    wizardState
   } = props;
+
   const [rooms, setRooms] = useState(minRooms);
-  const [departure, setDeparture] = useState({ day: "", month: "", year: "" });
+  const [departure, setDeparture] = useState({
+    day: "",
+    month: "",
+    year: ""
+  });
+  const roomConfiguration = [];
+  let arrival = "";
   const arrivalLabel = React.createRef();
   function handleRoomsChange(rooms, direction) {
     setRooms(rooms);
+    setWizardState();
   }
 
   function updateDeparture(date) {
-    setDeparture({
-      ...departure,
-      day: parseInt(date.day, 10) + 2,
-      month: date.month,
-      year: date.year
-    });
+    arrival = `${date.year}-${date.month}-${date.day}`;
+    setDeparture({ day: date.day + 1, month: date.month, year: date.year });
+    setWizardState();
+  }
+
+  function setWizardState() {
+    wizardState["Request"] = {
+      arrival,
+      departure: `${departure.year}-${departure.month}-${departure.day}`,
+      rooms: roomConfiguration
+    };
+  }
+
+  function setRoom(index, room) {
+    roomConfiguration[index] = room;
+    setWizardState();
   }
 
   return (
     <div>
       <Form>
         <FormRow>
-          <DateInput type="text" name="arrival" onChange={updateDeparture} />
+          <DateInput
+            name="arrival"
+            day={today.getDate()}
+            month={today.getMonth() + 1}
+            year={today.getFullYear()}
+            onRequestUpdate={updateDeparture}
+          />
           <Label ref={arrivalLabel}>Arrival</Label>
         </FormRow>
         <FormRow>
           <DateInput
-            type="text"
             name="departure"
             day={departure.day}
             month={departure.month}
@@ -77,20 +103,25 @@ function Request(props) {
           <Label>Departure</Label>
         </FormRow>
       </Form>
-      <NumberInput
-        min={minRooms}
-        max={maxRooms}
-        label={["Room", "Rooms"]}
-        description={`Max ${maxRooms} rooms`}
-        onChange={handleRoomsChange}
-        div
-      />
+      <FormRow>
+        <NumberInput
+          min={minRooms}
+          max={maxRooms}
+          label={["Room", "Rooms"]}
+          description={`Max ${maxRooms} rooms`}
+          onChange={handleRoomsChange}
+          div
+        />
+      </FormRow>
       {Array(rooms)
         .fill(1)
         .map((room, index) => (
           <div key={index}>
             <RoomTitle>Room {index + 1}</RoomTitle>
-            <RoomRequest maxChildren={maxChildren} />
+            <RoomRequest
+              maxChildren={maxChildren}
+              onUpdate={setRoom.bind(null, index)}
+            />
           </div>
         ))}
     </div>

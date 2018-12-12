@@ -35,12 +35,19 @@ const Toolbar = styled.div`
     padding: 0.5em 2em;
     border: 1px solid ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.primary};
+    border-radius: 0.4em;
+    min-height: 3em;
     &[disabled] {
       color: #ededed;
       border-color: #ededed;
     }
+    &:first-of-type {
+      margin-right: 2em;
+    }
   }
 `;
+
+const wizardState = {};
 
 function Wizard(props) {
   const { steps, children } = props;
@@ -76,7 +83,8 @@ function Wizard(props) {
       </Navbar>
       {React.Children.map(children, (child, stepIndex) => {
         const clonedChild = React.cloneElement(child, {
-          onChange: updateStepState.bind(null, stepIndex)
+          onChange: updateStepState.bind(null, stepIndex),
+          wizardState: wizardState
         });
         if (clonedChild.props.stepComplete) {
           completedSteps[stepIndex] = true;
@@ -89,9 +97,11 @@ function Wizard(props) {
         <button onClick={handlePrevClick} disabled={!completedSteps[step - 1]}>
           <i className="material-icons">keyboard_arrow_left</i>
         </button>
-        <button disabled={!completedSteps[step]} onClick={handleNextClick}>
-          <i className="material-icons">keyboard_arrow_right</i>
-        </button>
+        {step < totalSteps - 1 ? (
+          <button disabled={!completedSteps[step]} onClick={handleNextClick}>
+            <i className="material-icons">keyboard_arrow_right</i>
+          </button>
+        ) : null}
       </Toolbar>
     </WizardContainer>
   );

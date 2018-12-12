@@ -40,17 +40,17 @@ const Year = styled(Day)`
   border-right: 1px solid #efefef;
 `;
 
-const date = new Date();
-const currentYear = date.getFullYear();
-
 function DateInput(props) {
-  let { onChange, day, month, year } = props;
+  let { onRequestUpdate, day, month, year, name } = props;
+  const [date, setDate] = useState({ day, month, year });
+
   const [focused, setFocused] = useState(false);
-  const [date, setDate] = useState({
-    day: day,
-    month: month,
-    year: currentYear.toString()
-  });
+
+  function notifyParent() {
+    if (typeof onRequestUpdate === "function") {
+      onRequestUpdate(date);
+    }
+  }
 
   function selectText(e) {
     e.target.select();
@@ -59,15 +59,17 @@ function DateInput(props) {
 
   function handleDayChange(e) {
     const day = parseInt(e.target.value, 10);
+
     if (isNaN(day)) {
       return false;
     }
+
     if (isNaN(day) || day <= 0 || day > 31) {
       setDate(date);
     } else {
       setDate({ ...date, day });
     }
-    onChange({ ...date, day });
+    notifyParent();
   }
 
   function handleMonthChange(e) {
@@ -76,7 +78,7 @@ function DateInput(props) {
       month = "";
     }
     setDate({ ...date, month: month.toString() });
-    onChange({ ...date, month: month.toString() });
+    notifyParent();
   }
 
   function handleYearChange(e) {
@@ -86,31 +88,34 @@ function DateInput(props) {
     } else {
       setDate({ ...date, year });
     }
-    onChange({ ...date, year });
+    notifyParent();
   }
 
   return (
     <div focused={focused ? "focused" : null}>
       <Day
-        value={day}
+        value={date.day}
         placeholder="DD"
         onFocus={selectText}
         onBlur={() => setFocused(false)}
         onChange={handleDayChange}
+        name={`${name}[day]`}
       />
       <Month
-        value={month}
+        value={date.month}
         onFocus={selectText}
         onBlur={() => setFocused(false)}
         placeholder="MM"
         onChange={handleMonthChange}
+        name={`${name}[month]`}
       />
       <Year
-        value={year}
+        value={date.year}
         onFocus={selectText}
         onBlur={() => setFocused(false)}
         placeholder="YYYY"
         onChange={handleYearChange}
+        name={`${name}[year]`}
       />
     </div>
   );

@@ -25,36 +25,42 @@ const Row = styled.div`
 `;
 
 function Request(props) {
-  const { maxChildren } = props;
-  const [childrenAges, setChildrenAges] = useState([]);
-  const [numChildren, setNumChildren] = useState(0);
-  const [adults, setAdults] = useState(1);
+  const { minAdults, maxAdults, maxChildren, onUpdate } = props;
+  const [state, setState] = useState({
+    adults: minAdults,
+    children: 0,
+    childrenAges: []
+  });
 
-  /* useEffect(() => {
-    console.log({
-      adults,
-      numChildren,
-      childrenAges
-    });
-  });*/
+  function notifyParent(state) {
+    if (typeof onUpdate === "function") {
+      onUpdate(state);
+    }
+  }
 
   function handleAdultsChange(num, direction) {
-    setAdults(num);
+    const newState = { ...state, adults: num };
+    setState(newState);
+    notifyParent(newState);
   }
 
   function handleChildrenChange(num, direction) {
+    const ages = state.childrenAges;
     if (direction === "up") {
-      childrenAges.push(1);
-      setChildrenAges(setChildrenAges);
+      ages.push(1);
     } else {
-      childrenAges.pop();
-      setChildrenAges(childrenAges);
+      ages.pop();
     }
-    setNumChildren(num);
+    const newState = { ...state, children: num, childrenAges: ages };
+    setState(newState);
+    notifyParent(newState);
   }
 
   function handleChildrenAgeChange(child, age) {
-    childrenAges[child] = age;
+    const ages = state.childrenAges;
+    ages[child] = age;
+    const newState = { ...state, childrenAges: ages };
+    notifyParent(newState);
   }
 
   return (
@@ -74,7 +80,7 @@ function Request(props) {
         onChange={handleChildrenChange}
       />
       <Row>
-        {Array(numChildren)
+        {Array(state.children)
           .fill(1)
           .map((_, child) => (
             <AgeSelector
