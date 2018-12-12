@@ -63,12 +63,7 @@ function Request(props) {
     <div>
       <Form>
         <FormRow>
-          <DateInput
-            type="text"
-            name="arrival"
-            onChange={updateDeparture}
-            onFocus={() => arrivalLabel.current.focus()}
-          />
+          <DateInput type="text" name="arrival" onChange={updateDeparture} />
           <Label ref={arrivalLabel}>Arrival</Label>
         </FormRow>
         <FormRow>

@@ -44,8 +44,8 @@ const date = new Date();
 const currentYear = date.getFullYear();
 
 function DateInput(props) {
-  let { onChange, day, month, year, onFocus } = props;
-
+  let { onChange, day, month, year } = props;
+  const [focused, setFocused] = useState(false);
   const [date, setDate] = useState({
     day: day,
     month: month,
@@ -54,9 +54,7 @@ function DateInput(props) {
 
   function selectText(e) {
     e.target.select();
-    if (typeof onFocus === "function") {
-      onFocus(e);
-    }
+    setFocused(true);
   }
 
   function handleDayChange(e) {
@@ -92,22 +90,25 @@ function DateInput(props) {
   }
 
   return (
-    <div>
+    <div focused={focused ? "focused" : null}>
       <Day
         value={day}
         placeholder="DD"
         onFocus={selectText}
+        onBlur={() => setFocused(false)}
         onChange={handleDayChange}
       />
       <Month
         value={month}
         onFocus={selectText}
+        onBlur={() => setFocused(false)}
         placeholder="MM"
         onChange={handleMonthChange}
       />
       <Year
         value={year}
         onFocus={selectText}
+        onBlur={() => setFocused(false)}
         placeholder="YYYY"
         onChange={handleYearChange}
       />
