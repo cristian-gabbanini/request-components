@@ -80,6 +80,7 @@ function Wizard(props) {
   }
   function storeState(index, state) {
     states[index] = state;
+    console.log(states);
   }
 
   return (

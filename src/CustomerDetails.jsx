@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 
 const Form = styled.form`
@@ -34,32 +34,38 @@ const FormRow = styled.div`
 `;
 
 function CustomerDetails(props) {
-  const { onChange } = props;
-  const [state, setState] = useState({
-    title: "",
-    firstName: "",
-    lastName: ""
-  });
+  const { onChange, initialState, persistState } = props;
+  const [state, setState] = useState(
+    initialState || {
+      title: "",
+      firstName: "",
+      lastName: ""
+    }
+  );
 
-  useEffect(() => {
+  function dispatchChangeIfCompleted() {
     const { title, firstName, lastName } = state;
     if (title.length > 0 && firstName.length > 0 && lastName.length > 0) {
       onChange(true);
+      persistState(state);
     } else {
       onChange(false);
     }
-  });
+  }
 
   function handleTitleChange(e) {
     setState({ ...state, title: e.target.value });
+    dispatchChangeIfCompleted();
   }
 
   function handleFirstnameChange(e) {
     setState({ ...state, firstName: e.target.value });
+    dispatchChangeIfCompleted();
   }
 
   function handleLastnameChange(e) {
     setState({ ...state, lastName: e.target.value });
+    dispatchChangeIfCompleted();
   }
 
   return (
