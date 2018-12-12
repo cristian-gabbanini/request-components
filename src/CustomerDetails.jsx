@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 
 const Form = styled.form`
@@ -33,21 +33,20 @@ const FormRow = styled.div`
   margin: 1.3em auto;
 `;
 
+let persistedState = { title: "", firstName: "", lastName: "" };
+
 function CustomerDetails(props) {
-  const { onChange, initialState, persistState } = props;
-  const [state, setState] = useState(
-    initialState || {
-      title: "",
-      firstName: "",
-      lastName: ""
-    }
-  );
+  const { onChange } = props;
+  const [state, setState] = useState(persistedState);
+
+  useEffect(() => {
+    persistedState = { ...state };
+  });
 
   function dispatchChangeIfCompleted() {
     const { title, firstName, lastName } = state;
     if (title.length > 0 && firstName.length > 0 && lastName.length > 0) {
       onChange(true);
-      persistState(state);
     } else {
       onChange(false);
     }
@@ -75,7 +74,7 @@ function CustomerDetails(props) {
           type="text"
           id="title"
           name="title"
-          autocomplete="off"
+          autoComplete="off"
           className="small"
           onChange={handleTitleChange}
           value={state.title}
@@ -87,7 +86,7 @@ function CustomerDetails(props) {
           type="text"
           id="title"
           name="title"
-          autocomplete="off"
+          autoComplete="off"
           onChange={handleFirstnameChange}
           value={state.firstName}
         />
@@ -98,7 +97,7 @@ function CustomerDetails(props) {
           type="text"
           id="title"
           name="title"
-          autocomplete="off"
+          autoComplete="off"
           onChange={handleLastnameChange}
           value={state.lastName}
         />

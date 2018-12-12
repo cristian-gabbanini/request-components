@@ -45,18 +45,22 @@ const Toolbar = styled.div`
 function Wizard(props) {
   const { steps, children } = props;
   const totalSteps = steps.length;
+  const [completedSteps, setCompletedSteps] = useState(
+    Array(steps.length).fill(false)
+  );
   const [step, setStep] = useState(0);
-  const [toolbarButtons, setToolbarButtons] = useState({
-    nextEnabled: true,
-    prevEnabled: false
-  });
-  let states = [, ,];
+  const [toolbarButtons, setToolbarButtons] = useState(
+    completedSteps.map(r => ({
+      next: false,
+      prev: false
+    }))
+  );
 
-  function updateButtonsStatus(nextStep) {
-    setToolbarButtons({
-      nextEnabled: false,
-      prevEnabled: nextStep > 0
-    });
+  function updateButtonsStatus(step, completed) {
+    toolbarButtons[step] = {
+      prev: completedSteps[step - 1] || step > 0,
+      next: completed || step + 1 < totalSteps - 1
+    };
   }
 
   function handleNextClick() {
@@ -75,12 +79,12 @@ function Wizard(props) {
     updateButtonsStatus(nextStep);
   }
 
-  function updateStepState(completed) {
-    setToolbarButtons({ ...toolbarButtons, nextEnabled: completed });
-  }
-  function storeState(index, state) {
-    states[index] = state;
-    console.log(states);
+  function updateStepState(step, completed) {
+    if (completed) {
+      completedSteps[step] = completed;
+      setCompletedSteps(completedSteps);
+    }
+    updateButtonsStatus(step, completed);
   }
 
   return (
@@ -88,25 +92,19 @@ function Wizard(props) {
       <Navbar>
         <h1>{steps[step]}</h1>
       </Navbar>
-      {React.Children.map(children, (child, index) => {
+      {React.Children.map(children, (child, stepIndex) => {
         const clonedChild = React.cloneElement(child, {
-          onChange: updateStepState,
-          persistState: storeState.bind(index),
-          initialState: states[index] ? states[index] : undefined
+          onChange: updateStepState.bind(null, stepIndex)
         });
-        return index === step ? <WizardStep>{clonedChild}</WizardStep> : null;
+        return stepIndex === step ? (
+          <WizardStep>{clonedChild}</WizardStep>
+        ) : null;
       })}
       <Toolbar>
-        <button
-          onClick={handlePrevClick}
-          disabled={!toolbarButtons.prevEnabled}
-        >
+        <button onClick={handlePrevClick} disabled={!toolbarButtons[step].prev}>
           <i className="material-icons">keyboard_arrow_left</i>
         </button>
-        <button
-          disabled={!toolbarButtons.nextEnabled}
-          onClick={handleNextClick}
-        >
+        <button disabled={!toolbarButtons[step].next} onClick={handleNextClick}>
           <i className="material-icons">keyboard_arrow_right</i>
         </button>
       </Toolbar>

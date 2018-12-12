@@ -98,7 +98,7 @@ function NumberInput(props) {
 
   return (
     <SelectorDiv>
-      <input type="text" value={currentValue} />
+      <input type="text" value={currentValue} readOnly />
       <label>
         {currentLabel}
         {description && description.length > 0 ? (
