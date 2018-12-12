@@ -23,6 +23,7 @@ render(
     >
       <CustomerDetails />
       <Request
+        stepComplete={true}
         minRooms={1}
         maxRooms={5}
         minAdults={1}

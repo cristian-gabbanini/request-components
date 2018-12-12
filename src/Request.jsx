@@ -31,11 +31,13 @@ const RoomTitle = styled.h2`
 `;
 
 function Request(props) {
-  const { maxChildren, minRooms, maxRooms } = props;
+  const { maxChildren, minRooms, maxRooms, onChange } = props;
   const [rooms, setRooms] = useState(minRooms);
+
   function handleRoomsChange(rooms, direction) {
     setRooms(rooms);
   }
+
   return (
     <div>
       <NumberInput

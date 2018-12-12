@@ -37,7 +37,7 @@ let persistedState = { title: "", firstName: "", lastName: "" };
 
 function CustomerDetails(props) {
   const { onChange } = props;
-  const [state, setState] = useState(persistedState);
+  let [state, setState] = useState(persistedState);
 
   useEffect(() => {
     persistedState = { ...state };
@@ -52,19 +52,22 @@ function CustomerDetails(props) {
     }
   }
 
-  function handleTitleChange(e) {
-    setState({ ...state, title: e.target.value });
+  function updateState(property, value) {
+    state = { ...state, [property]: value };
+    setState(state);
     dispatchChangeIfCompleted();
+  }
+
+  function handleTitleChange(e) {
+    updateState("title", e.target.value);
   }
 
   function handleFirstnameChange(e) {
-    setState({ ...state, firstName: e.target.value });
-    dispatchChangeIfCompleted();
+    updateState("firstName", e.target.value);
   }
 
   function handleLastnameChange(e) {
-    setState({ ...state, lastName: e.target.value });
-    dispatchChangeIfCompleted();
+    updateState("lastName", e.target.value);
   }
 
   return (

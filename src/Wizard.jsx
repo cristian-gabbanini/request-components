@@ -49,26 +49,12 @@ function Wizard(props) {
     Array(steps.length).fill(false)
   );
   const [step, setStep] = useState(0);
-  const [toolbarButtons, setToolbarButtons] = useState(
-    completedSteps.map(r => ({
-      next: false,
-      prev: false
-    }))
-  );
-
-  function updateButtonsStatus(step, completed) {
-    toolbarButtons[step] = {
-      prev: completedSteps[step - 1] || step > 0,
-      next: completed || step + 1 < totalSteps - 1
-    };
-  }
 
   function handleNextClick() {
     const nextStep = step + 1;
     if (nextStep < totalSteps) {
       setStep(nextStep);
     }
-    updateButtonsStatus(nextStep);
   }
 
   function handlePrevClick() {
@@ -76,15 +62,11 @@ function Wizard(props) {
     if (nextStep >= 0) {
       setStep(nextStep);
     }
-    updateButtonsStatus(nextStep);
   }
 
   function updateStepState(step, completed) {
-    if (completed) {
-      completedSteps[step] = completed;
-      setCompletedSteps(completedSteps);
-    }
-    updateButtonsStatus(step, completed);
+    completedSteps[step] = completed;
+    setCompletedSteps(completedSteps);
   }
 
   return (
@@ -96,15 +78,18 @@ function Wizard(props) {
         const clonedChild = React.cloneElement(child, {
           onChange: updateStepState.bind(null, stepIndex)
         });
+        if (clonedChild.props.stepComplete) {
+          completedSteps[stepIndex] = true;
+        }
         return stepIndex === step ? (
           <WizardStep>{clonedChild}</WizardStep>
         ) : null;
       })}
       <Toolbar>
-        <button onClick={handlePrevClick} disabled={!toolbarButtons[step].prev}>
+        <button onClick={handlePrevClick} disabled={!completedSteps[step - 1]}>
           <i className="material-icons">keyboard_arrow_left</i>
         </button>
-        <button disabled={!toolbarButtons[step].next} onClick={handleNextClick}>
+        <button disabled={!completedSteps[step]} onClick={handleNextClick}>
           <i className="material-icons">keyboard_arrow_right</i>
         </button>
       </Toolbar>
