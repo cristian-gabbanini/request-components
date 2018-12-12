@@ -2,6 +2,10 @@
 import React, { useState } from "react";
 import NumberInput from "./NumberInput";
 import RoomRequest from "./RoomRequest";
+import Form from "./Form";
+import FormRow from "./FormRow";
+import DateInput from "./DateInput";
+import Label from "./Label";
 import styled from "@emotion/styled";
 import { jsx } from "@emotion/core";
 
@@ -31,7 +35,14 @@ const RoomTitle = styled.h2`
 `;
 
 function Request(props) {
-  const { maxChildren, minRooms, maxRooms, onChange } = props;
+  const {
+    maxChildren,
+    minRooms,
+    maxRooms,
+    minChildrenAge,
+    maxChildrenAge,
+    onChange
+  } = props;
   const [rooms, setRooms] = useState(minRooms);
 
   function handleRoomsChange(rooms, direction) {
@@ -40,6 +51,20 @@ function Request(props) {
 
   return (
     <div>
+      <Form>
+        <FormRow>
+          <DateInput
+            type="text"
+            name="arrival"
+            onChange={date => console.log(date)}
+          />
+          <Label>Arrival</Label>
+        </FormRow>
+        <FormRow>
+          <DateInput type="text" name="departure" />
+          <Label>Departure</Label>
+        </FormRow>
+      </Form>
       <NumberInput
         min={minRooms}
         max={maxRooms}

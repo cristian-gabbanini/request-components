@@ -21,7 +21,7 @@ render(
         "3 - Confirmation"
       ]}
     >
-      <CustomerDetails />
+      <CustomerDetails stepComplete={true} />
       <Request
         stepComplete={true}
         minRooms={1}
@@ -30,6 +30,8 @@ render(
         maxAdults={8}
         minChildren={0}
         maxChildren={5}
+        minChildrenAge={1}
+        maxChildrenAge={15}
       />
       <div>
         <h2>Here it is your request</h2>

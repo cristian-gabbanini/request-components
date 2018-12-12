@@ -16,7 +16,7 @@ const Navbar = styled.nav`
   position: absolute;
   left: 0;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 3em;
   line-height: 2em;
   padding: 0.5em;
