@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Input from "./Input";
 import styled from "@emotion/styled";
+import { css } from "@emotion/core";
+
+const placeholderColor = color => css`
+  &::-webkit-input-placeholder {
+    color: ${color};
+  }
+  &::-moz-placeholder {
+    color: ${color};
+  }
+  &:-ms-input-placeholder {
+    color: ${color};
+  }
+  &:-moz-placeholder {
+    color: ${color};
+  }
+`;
 
 const Day = styled(Input)`
   float: left;
@@ -11,7 +27,9 @@ const Day = styled(Input)`
     border-color: #ededed;
     background-color: ${({ theme }) => theme.colors.primary};
     color: #ffffff;
+    ${placeholderColor("#ffffff")}
   }
+  ${placeholderColor("#ededed")}
 `;
 const Month = styled(Day)`
   border-left: 0;
@@ -26,19 +44,26 @@ const date = new Date();
 const currentYear = date.getFullYear();
 
 function DateInput(props) {
-  const { onChange, day, month, year } = props;
+  let { onChange, day, month, year, onFocus } = props;
+
   const [date, setDate] = useState({
-    day: "DD",
-    month: "MM",
+    day: day,
+    month: month,
     year: currentYear.toString()
   });
 
   function selectText(e) {
     e.target.select();
+    if (typeof onFocus === "function") {
+      onFocus(e);
+    }
   }
 
   function handleDayChange(e) {
     const day = parseInt(e.target.value, 10);
+    if (isNaN(day)) {
+      return false;
+    }
     if (isNaN(day) || day <= 0 || day > 31) {
       setDate(date);
     } else {
@@ -69,13 +94,23 @@ function DateInput(props) {
   return (
     <div>
       <Day
-        value="DD"
+        value={day}
+        placeholder="DD"
         onFocus={selectText}
-        value={date.day}
         onChange={handleDayChange}
       />
-      <Month value="MM" value={date.month} onChange={handleMonthChange} />
-      <Year value="YYYY" value={date.year} onChange={handleYearChange} />
+      <Month
+        value={month}
+        onFocus={selectText}
+        placeholder="MM"
+        onChange={handleMonthChange}
+      />
+      <Year
+        value={year}
+        onFocus={selectText}
+        placeholder="YYYY"
+        onChange={handleYearChange}
+      />
     </div>
   );
 }

@@ -30,13 +30,13 @@ function Request(props) {
   const [numChildren, setNumChildren] = useState(0);
   const [adults, setAdults] = useState(1);
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log({
       adults,
       numChildren,
       childrenAges
     });
-  });
+  });*/
 
   function handleAdultsChange(num, direction) {
     setAdults(num);

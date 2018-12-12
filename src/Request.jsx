@@ -44,9 +44,19 @@ function Request(props) {
     onChange
   } = props;
   const [rooms, setRooms] = useState(minRooms);
-
+  const [departure, setDeparture] = useState({ day: "", month: "", year: "" });
+  const arrivalLabel = React.createRef();
   function handleRoomsChange(rooms, direction) {
     setRooms(rooms);
+  }
+
+  function updateDeparture(date) {
+    setDeparture({
+      ...departure,
+      day: parseInt(date.day, 10) + 2,
+      month: date.month,
+      year: date.year
+    });
   }
 
   return (
@@ -56,12 +66,19 @@ function Request(props) {
           <DateInput
             type="text"
             name="arrival"
-            onChange={date => console.log(date)}
+            onChange={updateDeparture}
+            onFocus={() => arrivalLabel.current.focus()}
           />
-          <Label>Arrival</Label>
+          <Label ref={arrivalLabel}>Arrival</Label>
         </FormRow>
         <FormRow>
-          <DateInput type="text" name="departure" />
+          <DateInput
+            type="text"
+            name="departure"
+            day={departure.day}
+            month={departure.month}
+            year={departure.year}
+          />
           <Label>Departure</Label>
         </FormRow>
       </Form>
