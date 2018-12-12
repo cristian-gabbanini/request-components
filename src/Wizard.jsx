@@ -8,7 +8,8 @@ const WizardContainer = styled.div`
 
 const WizardStep = styled.div`
   padding: 1em;
-  padding-top: 0;
+  max-width: 37.5em;
+  margin: 0 auto;
 `;
 
 const Navbar = styled.nav`
@@ -49,10 +50,11 @@ function Wizard(props) {
     nextEnabled: true,
     prevEnabled: false
   });
+  let states = [, ,];
 
   function updateButtonsStatus(nextStep) {
     setToolbarButtons({
-      nextEnabled: nextStep < totalSteps - 1,
+      nextEnabled: false,
       prevEnabled: nextStep > 0
     });
   }
@@ -73,14 +75,26 @@ function Wizard(props) {
     updateButtonsStatus(nextStep);
   }
 
+  function updateStepState(completed) {
+    setToolbarButtons({ ...toolbarButtons, nextEnabled: completed });
+  }
+  function storeState(index, state) {
+    states[index] = state;
+  }
+
   return (
     <WizardContainer>
       <Navbar>
         <h1>{steps[step]}</h1>
       </Navbar>
-      {React.Children.map(children, (child, index) =>
-        index === step ? <WizardStep>{child}</WizardStep> : null
-      )}
+      {React.Children.map(children, (child, index) => {
+        const clonedChild = React.cloneElement(child, {
+          onChange: updateStepState,
+          persistState: storeState.bind(index),
+          initialState: states[index] ? states[index] : undefined
+        });
+        return index === step ? <WizardStep>{clonedChild}</WizardStep> : null;
+      })}
       <Toolbar>
         <button
           onClick={handlePrevClick}
