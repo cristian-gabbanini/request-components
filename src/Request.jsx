@@ -37,7 +37,7 @@ function Request(props) {
     setRooms(rooms);
   }
   return (
-    <div css={{ padding: "1em" }}>
+    <div>
       <NumberInput
         min={minRooms}
         max={maxRooms}

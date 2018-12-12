@@ -45,6 +45,7 @@ const SelectorDiv = styled.div`
   }
   input {
     color: ${props => props.theme.colors.primary};
+    background-color: transparent;
     font-size: 1.5em;
     max-width: 1.2em;
     border: 0;
