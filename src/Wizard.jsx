@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import State from "./State";
 
@@ -25,6 +25,25 @@ const Navbar = styled.nav`
   h1 {
     color: #ffffff;
     margin: 0;
+    opacity: 0;
+    &.slideIn {
+      animation: slideIn 300ms;
+      animation-fill-mode: forwards;
+    }
+    &.visible {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(-200%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 `;
 
@@ -52,8 +71,21 @@ function Wizard(props) {
     Array(steps.length).fill(false)
   );
   const [step, setStep] = useState(0);
+  const h1Ref = React.createRef();
+
+  useEffect(
+    () => {
+      setTimeout(() => {
+        h1Ref.current.classList.remove("slideIn");
+        h1Ref.current.classList.add("visible");
+      }, 600);
+    },
+    [step]
+  );
 
   function handleNextClick() {
+    console.log("www");
+    h1Ref.current.classList.add("slideIn");
     const nextStep = step + 1;
     if (nextStep < totalSteps) {
       setStep(nextStep);
@@ -75,7 +107,7 @@ function Wizard(props) {
   return (
     <WizardContainer>
       <Navbar>
-        <h1>{steps[step]}</h1>
+        <h1 ref={h1Ref}>{steps[step]}</h1>
       </Navbar>
       {React.Children.map(children, (child, stepIndex) => {
         const clonedChild = React.cloneElement(child, {
