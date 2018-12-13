@@ -3,7 +3,9 @@ function State() {
   return {
     reduce(f) {
       state = f(state);
-      console.log("State:", state);
+      return state;
+    },
+    get() {
       return state;
     }
   };

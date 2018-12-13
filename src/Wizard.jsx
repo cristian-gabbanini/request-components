@@ -43,6 +43,8 @@ const Toolbar = styled.div`
   }
 `;
 
+const sharedState = State();
+
 function Wizard(props) {
   const { steps, children } = props;
   const totalSteps = steps.length;
@@ -50,8 +52,6 @@ function Wizard(props) {
     Array(steps.length).fill(false)
   );
   const [step, setStep] = useState(0);
-
-  const sharedState = State();
 
   function handleNextClick() {
     const nextStep = step + 1;

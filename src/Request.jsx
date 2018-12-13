@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NumberInput from "./NumberInput";
 import RoomRequest from "./RoomRequest";
 import Form from "./Form";
@@ -41,13 +41,33 @@ function Request(props) {
     maxRooms,
     minChildrenAge,
     maxChildrenAge,
-    onChange
+    wizard
   } = props;
+  let roomRequests = [];
   const [rooms, setRooms] = useState(minRooms);
   const [departure, setDeparture] = useState({ day: "", month: "", year: "" });
   const arrivalLabel = React.createRef();
   function handleRoomsChange(rooms, direction) {
     setRooms(rooms);
+  }
+
+  useEffect(() => {
+    updateWizardState({ departure, rooms });
+  });
+
+  function updateWizardState({ departure, roomRequests }) {
+    wizard.reduce(ws => ({
+      ...ws,
+      request: {
+        departure: `${departure.year}-${departure.month}-${departure.day}`,
+        rooms: roomRequests
+      }
+    }));
+  }
+
+  function updateRooms(index, roomRequest) {
+    roomRequests[index] = roomRequest;
+    updateWizardState({ departure, roomRequests });
   }
 
   function updateDeparture(date) {
@@ -82,20 +102,25 @@ function Request(props) {
           <Label>Departure</Label>
         </FormRow>
       </Form>
-      <NumberInput
-        min={minRooms}
-        max={maxRooms}
-        label={["Room", "Rooms"]}
-        description={`Max ${maxRooms} rooms`}
-        onChange={handleRoomsChange}
-        div
-      />
+      <FormRow>
+        <NumberInput
+          min={minRooms}
+          max={maxRooms}
+          label={["Room", "Rooms"]}
+          description={`Max ${maxRooms} rooms`}
+          onChange={handleRoomsChange}
+          div
+        />
+      </FormRow>
       {Array(rooms)
         .fill(1)
         .map((room, index) => (
           <div key={index}>
             <RoomTitle>Room {index + 1}</RoomTitle>
-            <RoomRequest maxChildren={maxChildren} />
+            <RoomRequest
+              maxChildren={maxChildren}
+              onChange={updateRooms.bind(this, index)}
+            />
           </div>
         ))}
     </div>

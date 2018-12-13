@@ -4,6 +4,8 @@ import "./styles.css";
 import Request from "./Request";
 import CustomerDetails from "./CustomerDetails";
 import Wizard from "./Wizard";
+import Confirmation from "./Confirmation";
+
 import { ThemeProvider } from "emotion-theming";
 
 const theme = {
@@ -34,9 +36,7 @@ render(
         minChildrenAge={1}
         maxChildrenAge={15}
       />
-      <div>
-        <h2>Here it is your request</h2>
-      </div>
+      <Confirmation />
     </Wizard>
   </ThemeProvider>,
   document.getElementById("app")

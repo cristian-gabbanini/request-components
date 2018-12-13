@@ -5,16 +5,15 @@ import Label from "./Label";
 import Form from "./Form";
 import FormRow from "./FormRow";
 
-let persistedState = { title: "", firstName: "", lastName: "", email: "" };
-
 function CustomerDetails(props) {
   const { onChange, wizard } = props;
-  const emailRef = React.createRef();
-  let [state, setState] = useState(persistedState);
+  let [state, setState] = useState(() => {
+    const { customer } = wizard.get();
+    return customer || { title: "", firstName: "", lastName: "", email: "" };
+  });
   let [isEmailValid, setIsEmailValid] = useState(true);
 
   useEffect(() => {
-    persistedState = { ...state };
     wizard.reduce(ws => ({ ...ws, customer: state }));
   });
 
@@ -91,7 +90,6 @@ function CustomerDetails(props) {
           type="email"
           id="email"
           name="email"
-          autoComplete="off"
           onChange={handleEmailChange}
           className={isEmailValid ? null : "error"}
           value={state.email}

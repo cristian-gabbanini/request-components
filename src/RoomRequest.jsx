@@ -25,36 +25,46 @@ const Row = styled.div`
 `;
 
 function Request(props) {
-  const { maxChildren } = props;
+  const { maxChildren, onChange } = props;
   const [childrenAges, setChildrenAges] = useState([]);
   const [numChildren, setNumChildren] = useState(0);
   const [adults, setAdults] = useState(1);
 
-  /* useEffect(() => {
-    console.log({
-      adults,
-      numChildren,
-      childrenAges
-    });
-  });*/
+  function notifyParent() {
+    if (typeof onChange === "function") {
+      onChange({
+        adults,
+        children: numChildren,
+        childrenAges
+      });
+    }
+  }
+
+  useEffect(
+    () => {
+      notifyParent();
+    },
+    [adults, childrenAges, numChildren]
+  );
 
   function handleAdultsChange(num, direction) {
-    setAdults(num);
+    setAdults(num, notifyParent);
   }
 
   function handleChildrenChange(num, direction) {
     if (direction === "up") {
       childrenAges.push(1);
-      setChildrenAges(setChildrenAges);
+      setChildrenAges(setChildrenAges, notifyParent);
     } else {
       childrenAges.pop();
-      setChildrenAges(childrenAges);
+      setChildrenAges(childrenAges, notifyParent);
     }
-    setNumChildren(num);
+    setNumChildren(num, notifyParent);
   }
 
   function handleChildrenAgeChange(child, age) {
     childrenAges[child] = age;
+    setChildrenAges(childrenAges);
   }
 
   return (
