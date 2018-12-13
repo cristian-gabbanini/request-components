@@ -41,33 +41,45 @@ function Request(props) {
     maxRooms,
     minChildrenAge,
     maxChildrenAge,
+    onChange,
     wizard
   } = props;
   let roomRequests = [];
-  const [rooms, setRooms] = useState(minRooms);
+  const [rooms, setRooms] = useState(() => {
+    const { request } = wizard.get();
+    if (request) {
+      const { rooms } = request;
+      return rooms;
+    }
+    return minRooms;
+  });
   const [departure, setDeparture] = useState({ day: "", month: "", year: "" });
   const arrivalLabel = React.createRef();
+
   function handleRoomsChange(rooms, direction) {
     setRooms(rooms);
   }
 
-  useEffect(() => {
-    updateWizardState({ departure, rooms });
-  });
+  useEffect(
+    () => {
+      updateWizardState({ departure, rooms, roomRequests });
+    },
+    [rooms, roomRequests]
+  );
 
-  function updateWizardState({ departure, roomRequests }) {
+  function updateWizardState({ departure, rooms, roomRequests }) {
     wizard.reduce(ws => ({
       ...ws,
       request: {
         departure: `${departure.year}-${departure.month}-${departure.day}`,
-        rooms: roomRequests
+        rooms,
+        roomRequests
       }
     }));
   }
 
   function updateRooms(index, roomRequest) {
     roomRequests[index] = roomRequest;
-    updateWizardState({ departure, roomRequests });
   }
 
   function updateDeparture(date) {
@@ -106,6 +118,7 @@ function Request(props) {
         <NumberInput
           min={minRooms}
           max={maxRooms}
+          value={rooms}
           label={["Room", "Rooms"]}
           description={`Max ${maxRooms} rooms`}
           onChange={handleRoomsChange}

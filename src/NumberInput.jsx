@@ -60,8 +60,8 @@ function pluralize([singular, plural], value) {
 }
 
 function NumberInput(props) {
-  const { min, max, label, description, onChange } = props;
-  const [currentValue, setCurrentValue] = useState(min);
+  const { min, max, value, label, description, onChange } = props;
+  const [currentValue, setCurrentValue] = useState(value || min);
   const [singular, plural] = label;
   const [currentLabel, setCurrentLabel] = useState(pluralize(label, min));
   const [incrementEnabled, setIncrementEnabled] = useState(currentValue < max);
