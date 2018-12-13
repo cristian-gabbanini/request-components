@@ -34,6 +34,10 @@ const RoomTitle = styled.h2`
   }
 `;
 
+function dateObject() {
+  return { day: "", month: "", year: "" };
+}
+
 function Request(props) {
   const {
     maxChildren,
@@ -53,7 +57,22 @@ function Request(props) {
     }
     return minRooms;
   });
-  const [departure, setDeparture] = useState({ day: "", month: "", year: "" });
+  const [arrival, setArrival] = useState(() => {
+    const { request } = wizard.get();
+    if (request) {
+      const { arrival } = request;
+      return arrival;
+    }
+    return dateObject();
+  });
+  const [departure, setDeparture] = useState(() => {
+    const { request } = wizard.get();
+    if (request) {
+      const { departure } = request;
+      return departure;
+    }
+    return dateObject();
+  });
   const arrivalLabel = React.createRef();
 
   function handleRoomsChange(rooms, direction) {
@@ -62,16 +81,17 @@ function Request(props) {
 
   useEffect(
     () => {
-      updateWizardState({ departure, rooms, roomRequests });
+      updateWizardState({ arrival, departure, rooms, roomRequests });
     },
-    [rooms, roomRequests]
+    [arrival, departure, rooms, roomRequests]
   );
 
-  function updateWizardState({ departure, rooms, roomRequests }) {
+  function updateWizardState({ arrival, departure, rooms, roomRequests }) {
     wizard.reduce(ws => ({
       ...ws,
       request: {
-        departure: `${departure.year}-${departure.month}-${departure.day}`,
+        arrival,
+        departure,
         rooms,
         roomRequests
       }
@@ -83,6 +103,7 @@ function Request(props) {
   }
 
   function updateDeparture(date) {
+    setArrival(date);
     setDeparture({
       ...departure,
       day: parseInt(date.day, 10) + 2,
@@ -98,6 +119,9 @@ function Request(props) {
           <DateInput
             type="text"
             name="arrival"
+            day={arrival.day}
+            month={arrival.month}
+            year={arrival.year}
             onChange={updateDeparture}
             onFocus={() => arrivalLabel.current.focus()}
           />
