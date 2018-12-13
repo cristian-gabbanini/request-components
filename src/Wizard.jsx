@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
+import State from "./State";
 
 const WizardContainer = styled.div`
   position: relative;
@@ -50,6 +51,8 @@ function Wizard(props) {
   );
   const [step, setStep] = useState(0);
 
+  const sharedState = State();
+
   function handleNextClick() {
     const nextStep = step + 1;
     if (nextStep < totalSteps) {
@@ -76,7 +79,8 @@ function Wizard(props) {
       </Navbar>
       {React.Children.map(children, (child, stepIndex) => {
         const clonedChild = React.cloneElement(child, {
-          onChange: updateStepState.bind(null, stepIndex)
+          onChange: updateStepState.bind(null, stepIndex),
+          wizard: sharedState
         });
         if (clonedChild.props.stepComplete) {
           completedSteps[stepIndex] = true;

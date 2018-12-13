@@ -8,7 +8,8 @@ import { ThemeProvider } from "emotion-theming";
 
 const theme = {
   colors: {
-    primary: "#395EC1"
+    primary: "#395EC1",
+    danger: "#DE6971"
   }
 };
 

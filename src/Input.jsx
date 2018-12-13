@@ -19,6 +19,13 @@ const Input = styled.input`
     &.small {
       width: 5em;
     }
+    &.error {
+      color: ${({ theme }) => theme.colors.danger};
+      border-color: ${({ theme }) => theme.colors.danger};
+      & + label {
+        color: ${({ theme }) => theme.colors.danger};
+      }
+    }
   }  
 `;
 
