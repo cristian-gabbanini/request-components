@@ -1,12 +1,8 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { render } from "react-dom";
 import "./styles.css";
-import Request from "./Request";
-import CustomerDetails from "./CustomerDetails";
-import Wizard from "./Wizard";
-import Confirmation from "./Confirmation";
-import Container from "./Container";
-import { MessagesProvider } from "./MessagesContext";
+import RequestApp from "./RequestApp";
+import { MessagesProvider, MessagesContext } from "./MessagesContext";
 
 import { ThemeProvider } from "emotion-theming";
 
@@ -20,22 +16,7 @@ const theme = {
 render(
   <ThemeProvider theme={theme}>
     <MessagesProvider lang="it">
-      <Container>
-        <Wizard steps={["2 - Fill in your request", "3 - Confirmation"]}>
-          <Request
-            stepComplete={true}
-            minRooms={1}
-            maxRooms={5}
-            minAdults={1}
-            maxAdults={8}
-            minChildren={0}
-            maxChildren={5}
-            minChildrenAge={1}
-            maxChildrenAge={15}
-          />
-          <Confirmation />
-        </Wizard>
-      </Container>
+      <RequestApp />
     </MessagesProvider>
   </ThemeProvider>,
   document.getElementById("app")
