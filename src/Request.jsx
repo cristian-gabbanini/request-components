@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import NumberInput from "./NumberInput";
 import RoomRequest from "./RoomRequest";
 import Form from "./Form";
@@ -8,6 +8,7 @@ import DateInput from "./DateInput";
 import Label from "./Label";
 import styled from "@emotion/styled";
 import { jsx } from "@emotion/core";
+import { MessagesContext } from "./MessagesContext";
 
 const Separator = styled.hr`
   margin-top: 2em;
@@ -39,6 +40,8 @@ function dateObject() {
 }
 
 function Request(props) {
+  const messages = useContext(MessagesContext);
+  console.log(messages);
   const {
     maxChildren,
     minRooms,
@@ -143,7 +146,7 @@ function Request(props) {
           min={minRooms}
           max={maxRooms}
           value={rooms}
-          label={["Room", "Rooms"]}
+          label={[messages.room, messages.rooms]}
           description={`Max ${maxRooms} rooms`}
           onChange={handleRoomsChange}
           div
