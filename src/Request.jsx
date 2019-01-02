@@ -9,6 +9,7 @@ import Label from "./Label";
 import styled from "@emotion/styled";
 import { jsx } from "@emotion/core";
 import { MessagesContext } from "./MessagesContext";
+import Datepicker from "./Datepicker";
 
 const Separator = styled.hr`
   margin-top: 2em;
@@ -41,7 +42,7 @@ function dateObject() {
 
 function Request(props) {
   const messages = useContext(MessagesContext);
-  console.log(messages);
+
   const {
     maxChildren,
     minRooms,
@@ -51,6 +52,7 @@ function Request(props) {
     onChange,
     wizard
   } = props;
+
   let roomRequests = [];
   const [rooms, setRooms] = useState(() => {
     const { request } = wizard.get();
@@ -119,26 +121,7 @@ function Request(props) {
     <div>
       <Form>
         <FormRow>
-          <DateInput
-            type="text"
-            name="arrival"
-            day={arrival.day}
-            month={arrival.month}
-            year={arrival.year}
-            onChange={updateDeparture}
-            onFocus={() => arrivalLabel.current.focus()}
-          />
-          <Label ref={arrivalLabel}>Arrival</Label>
-        </FormRow>
-        <FormRow>
-          <DateInput
-            type="text"
-            name="departure"
-            day={departure.day}
-            month={departure.month}
-            year={departure.year}
-          />
-          <Label>Departure</Label>
+          <Datepicker />
         </FormRow>
       </Form>
       <FormRow>
@@ -147,9 +130,7 @@ function Request(props) {
           max={maxRooms}
           value={rooms}
           label={[messages.room, messages.rooms]}
-          description={`Max ${maxRooms} rooms`}
           onChange={handleRoomsChange}
-          div
         />
       </FormRow>
       {Array(rooms)

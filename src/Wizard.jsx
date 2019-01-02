@@ -1,50 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import State from "./State";
 
 const WizardContainer = styled.div`
   position: relative;
-  padding-top: 3em;
-`;
-
-const WizardStep = styled.div`
   padding: 1em;
   max-width: 37.5em;
   margin: 0 auto;
 `;
 
-const Navbar = styled.nav`
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 3em;
-  line-height: 2em;
-  padding: 0.5em;
-  background-color: ${({ theme }) => theme.colors.primary};
-  h1 {
-    color: #ffffff;
-    margin: 0;
-    opacity: 0;
-    &.slideIn {
-      animation: slideIn 300ms;
-      animation-fill-mode: forwards;
-    }
-    &.visible {
-      opacity: 1;
-    }
-  }
+const WizardStep = styled.div``;
 
-  @keyframes slideIn {
-    from {
-      transform: translateX(-200%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
+const Title = styled.h1`
+  color: ${({ theme }) => theme.colors.primary};
+  margin: 0.2em 0;
 `;
 
 const Toolbar = styled.div`
@@ -73,19 +42,7 @@ function Wizard(props) {
   const [step, setStep] = useState(0);
   const h1Ref = React.createRef();
 
-  useEffect(
-    () => {
-      setTimeout(() => {
-        h1Ref.current.classList.remove("slideIn");
-        h1Ref.current.classList.add("visible");
-      }, 600);
-    },
-    [step]
-  );
-
   function handleNextClick() {
-    console.log("www");
-    h1Ref.current.classList.add("slideIn");
     const nextStep = step + 1;
     if (nextStep < totalSteps) {
       setStep(nextStep);
@@ -106,9 +63,8 @@ function Wizard(props) {
 
   return (
     <WizardContainer>
-      <Navbar>
-        <h1 ref={h1Ref}>{steps[step]}</h1>
-      </Navbar>
+      <Title>{steps[step]}</Title>
+
       {React.Children.map(children, (child, stepIndex) => {
         const clonedChild = React.cloneElement(child, {
           onChange: updateStepState.bind(null, stepIndex),

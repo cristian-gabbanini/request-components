@@ -9,7 +9,9 @@ import { ThemeProvider } from "emotion-theming";
 const theme = {
   colors: {
     primary: "#395EC1",
-    danger: "#DE6971"
+    danger: "#DE6971",
+    border: "#ededed",
+    text: "#313131"
   }
 };
 
